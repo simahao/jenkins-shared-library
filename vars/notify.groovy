@@ -1,4 +1,4 @@
-import com.mycompany.colinbut.Constants
+import hz.Constants
 
 def call(Map config=[:]) {
     if (config.type == "slack") {

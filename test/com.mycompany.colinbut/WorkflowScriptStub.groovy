@@ -1,4 +1,4 @@
-package com.mycompany.colinbut
+package hz
 
 class WorkflowScriptStub {
     String sh(String args) {

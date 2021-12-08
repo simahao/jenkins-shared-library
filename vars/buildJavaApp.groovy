@@ -1,4 +1,4 @@
-import com.mycompany.colinbut.Git
+import hz.Git
 
 def call(Map args=[:], Closure body={}) {
     node {

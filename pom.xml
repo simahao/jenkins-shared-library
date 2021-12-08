@@ -1,36 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+  http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.mycompany.colinbut</groupId>
-    <artifactId>jenkins-shared-library</artifactId>
+    <groupId>simahao</groupId>
+    <artifactId>simahao-cicd</artifactId>
     <packaging>jar</packaging>
-    <version>0.0.2-SNAPSHOT</version>
-    <description>Jenkins Shared Library (by Colin But)</description>
+    <version>0.0.1-SNAPSHOT</version>
+    <description>Jenkins Shared Library(by simahao)</description>
 
     <properties>
-        <groovy.core.version>2.4.11</groovy.core.version>
-        <junit.version>4.13.1</junit.version>
-        <jenkins-spock.version>2.0.0</jenkins-spock.version>
-        <jenkins.version>2.102</jenkins.version>
-        <jenkins.workflow.step.version>2.6</jenkins.workflow.step.version>
-        <jenkins.workflow.cps.version>2.36</jenkins.workflow.cps.version>
-        <jenkins.servlet.version>3.1.0</jenkins.servlet.version>
-        <junit.plugin.version>1.24</junit.plugin.version>
-        <google.guava.version>20.0</google.guava.version>
-        <log.slf4j.version>1.7.25</log.slf4j.version>
-        <log.logback.version>1.2.3</log.logback.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <groovy.core.version>3.0.9</groovy.core.version>
+        <junit.version>4.13.2</junit.version>
+        <jenkins-spock.version>2.1.5</jenkins-spock.version>
+        <jenkins.version>2.317</jenkins.version>
+        <jenkins.workflow.step.version>2.24</jenkins.workflow.step.version>
+        <jenkins.workflow.cps.version>2.93</jenkins.workflow.cps.version>
+        <jenkins.workflow.durable.task.step>2.40</jenkins.workflow.durable.task.step>
+        <jenkins.pipeline.stage.step>2.5</jenkins.pipeline.stage.step>
+        <jenkins.git>4.9.0</jenkins.git>
+        <jenkins.servlet.version>4.0.1</jenkins.servlet.version>
+        <surefire.plugin.version>3.0.0-M5</surefire.plugin.version>
+        <gmavenplus.plugin.version>1.13.1</gmavenplus.plugin.version>
+        <junit.plugin.version>1.53</junit.plugin.version>
+        <google.guava.version>31.0-jre</google.guava.version>
+        <!-- <log.slf4j.version>1.7.25</log.slf4j.version>
+        <log.logback.version>1.2.3</log.logback.version> -->
         <test.loglevel>ERROR</test.loglevel>
         <logdir>${project.build.directory}/log</logdir>
 
     </properties>
 
-    <repositories>
+    <!-- <repositories>
         <repository>
             <id>jenkins-releases</id>
             <name>Jenkins Releases</name>
             <url>http://repo.jenkins-ci.org/releases</url>
         </repository>
-    </repositories>
+    </repositories> -->
 
     <dependencyManagement>
         <dependencies>
@@ -49,6 +62,14 @@
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
             <version>${groovy.core.version}</version>
+            <type>pom</type>
+        </dependency>
+
+        <!-- provides echo() step -->
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-basic-steps</artifactId>
+            <version>${jenkins.workflow.step.version}</version>
         </dependency>
 
         <dependency>
@@ -72,13 +93,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- provides echo() step -->
-        <dependency>
-            <groupId>org.jenkins-ci.plugins.workflow</groupId>
-            <artifactId>workflow-basic-steps</artifactId>
-            <version>2.6</version>
-        </dependency>
-
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-cps</artifactId>
@@ -90,21 +104,23 @@
             <!-- provides sh() step -->
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-durable-task-step</artifactId>
-            <version>2.21</version>
+            <version>${jenkins.workflow.durable.task.step}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <!-- provides stage() step -->
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>pipeline-stage-step</artifactId>
-            <version>2.3</version>
+            <version>${jenkins.pipeline.stage.step}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <!-- provides git() step -->
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>git</artifactId>
-            <version>3.9.1</version>
+            <version>${jenkins.git}</version>
             <scope>test</scope>
         </dependency>
 
@@ -128,7 +144,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.0</version>
+                <version>${surefire.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>default-test</id>
@@ -154,7 +170,7 @@
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>
-                <version>1.6.1</version>
+                <version>${gmavenplus.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>groovy</id>

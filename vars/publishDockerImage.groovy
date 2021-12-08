@@ -1,4 +1,4 @@
-import com.mycompany.colinbut.DockerEcr
+import hz.Docker
 
 /**
  * Usage:
@@ -6,11 +6,11 @@ import com.mycompany.colinbut.DockerEcr
  * publishDockerImage awsCliVersion: 1, microserviceName: microservice-java
  */
 def call(Map args, Closure body={}) {
-    def dockerEcr = new DockerEcr(this)
+    def Docker = new Docker(this)
     node {
         stage("Publish Docker Image to ECR") {
-            dockerEcr.loginToAWSECRDockerRegistry(args.awsCliVersion)
-            dockerEcr.publishDockerImageToECR(args.microserviceName)
+            Docker.loginToAWSECRDockerRegistry(args.awsCliVersion)
+            Docker.publishDockerImageToECR(args.microserviceName)
         }
         body()
     }

@@ -1,22 +1,22 @@
-package com.mycompany.colinbut
+package hz
 
 import spock.lang.Specification
 
-class DockerEcrShould extends Specification {
+class DockerShould extends Specification {
 
     private static final String COMMIT_HASH = "5e68e94b46dcde93def3f93f0da1933000294dc4"
 
-    private DockerEcr dockerEcr
+    private Docker Docker
     private def script
 
     def setup() {
         script = Spy(WorkflowScriptStub)
-        dockerEcr = new DockerEcr(script)
+        Docker = new Docker(script)
     }
 
     def "Test login to AWS ECR Docker Registry using AWS CLI 1"() {
         when:
-            dockerEcr.loginToAWSECRDockerRegistry(1)
+            Docker.loginToAWSECRDockerRegistry(1)
         then:
             1 * script.sh(
                     """
@@ -29,7 +29,7 @@ class DockerEcrShould extends Specification {
 
     def "Test login to AWS ECR Docker Registry using AWS CLI 2"() {
         when:
-            dockerEcr.loginToAWSECRDockerRegistry(2)
+            Docker.loginToAWSECRDockerRegistry(2)
         then:
         1 * script.sh(
                     """
@@ -44,9 +44,9 @@ class DockerEcrShould extends Specification {
             def git = GroovyMock(Git.class, global:true)
             new Git(script) >> git
         when:
-            dockerEcr.buildDockerImage("microservice-name")
+            Docker.buildDockerImage("microservice-name")
         then:
-            1 * git.commitHash() >> "${COMMIT_HASH}"
+            1 * git.getHeadHash() >> "${COMMIT_HASH}"
             1 * script.sh("docker build -t 066203203749.dkr.ecr.eu-west-2.amazonaws.com/microservice-name:${COMMIT_HASH} .")
     }
 
@@ -55,9 +55,9 @@ class DockerEcrShould extends Specification {
             def git = GroovyMock(Git.class, global: true)
             new Git(script) >> git
         when:
-            dockerEcr.publishDockerImageToECR("microservice-name")
+            Docker.publishDockerImageToECR("microservice-name")
         then:
-            1 * git.commitHash() >> "${COMMIT_HASH}"
+            1 * git.getHeadHash() >> "${COMMIT_HASH}"
             1 * script.sh("docker push 066203203749.dkr.ecr.eu-west-2.amazonaws.com/microservice-name:${COMMIT_HASH}")
     }
 }

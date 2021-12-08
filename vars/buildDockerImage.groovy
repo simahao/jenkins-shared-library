@@ -1,10 +1,10 @@
-import com.mycompany.colinbut.DockerEcr
+import hz.Docker
 
 def call(Map args, Closure body={}) {
     node {
-        def dockerEcr = new DockerEcr(this)
+        def Docker = new Docker(this)
         stage("Build Docker Image") {
-            dockerEcr.buildDockerImage("${args.microserviceName}")
+            Docker.buildDockerImage("${args.microserviceName}")
         }
         body()
     }

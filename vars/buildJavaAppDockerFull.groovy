@@ -1,5 +1,5 @@
-import com.mycompany.colinbut.Constants
-import com.mycompany.colinbut.DockerEcr
+import hz.Constants
+import hz.Docker
 
 def call(Map args) {
     node {
@@ -30,14 +30,14 @@ def call(Map args) {
             sh "./mvnw package -DskipTests=true"
         }
 
-        def dockerEcr = new DockerEcr(this)
+        def Docker = new Docker(this)
 
         stage("Build Docker Image") {
-            dockerEcr.buildDockerImage("${args.microserviceName}")
+            Docker.buildDockerImage("${args.microserviceName}")
         }
 
         stage("Publish Docker Image") {
-            dockerEcr.publishDockerImageToECR("${args.microserviceName}")
+            Docker.publishDockerImageToECR("${args.microserviceName}")
         }
 
         stage("Deploying to Dev") {

@@ -1,5 +1,5 @@
-import com.mycompany.colinbut.DockerEcr
-import com.mycompany.colinbut.Git
+import hz.Docker
+import hz.Git
 
 def call(Map args=[:]) {
     node {
@@ -48,9 +48,9 @@ def packageArtifact(Map args) {
 
 def buildDockerImage(Map args) {
     node {
-        def dockerEcr = new DockerEcr(this)
+        def Docker = new Docker(this)
         stage("Build Docker Image") {
-            dockerEcr.buildDockerImage("${args.microserviceName}")
+            Docker.buildDockerImage("${args.microserviceName}")
         }
     }
     return this
@@ -58,9 +58,9 @@ def buildDockerImage(Map args) {
 
 def publishDockerImage(Map args) {
     node {
-        def dockerEcr = new DockerEcr(this)
+        def Docker = new Docker(this)
         stage("Publish Docker Image") {
-            dockerEcr.publishDockerImageToECR("${args.microserviceName}")
+            Docker.publishDockerImageToECR("${args.microserviceName}")
         }
     }
     return this

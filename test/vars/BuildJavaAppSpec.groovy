@@ -1,5 +1,5 @@
 import com.homeaway.devtools.jenkins.testing.JenkinsPipelineSpecification
-import com.mycompany.colinbut.Git
+import hz.Git
 
 class BuildJavaAppSpec extends JenkinsPipelineSpecification {
     def buildJavaApp = null
