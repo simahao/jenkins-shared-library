@@ -13,14 +13,14 @@ class Git implements Serializable {
     }
 
     def checkout(String orgsOrUserName, String repoName) {
-        this.script.git credentialsId: Constants.JENKINS_GITEA_CREDENTIALS_ID, url: "http://170.0.50.9:3002/${orgsOrUserName}/${repoName}.git"
+        this.script.git credentialsId: Constants.GITEA_CREDENTIALS_ID, url: "Constants.GITEA_URL/${orgsOrUserName}/${repoName}.git"
     }
+
+    def checkout(String orgsOrUserName, String repoName, String giteaCredentail) {
+        this.script.git credentialsId: ${giteaCredentail}, url: "Constants.GITEA_URL/${orgsOrUserName}/${repoName}.git"
+    }    
 
     String getHeadHash() {
-        return this.script.sh(script: getLatestGitgetHeadHashCommand(), returnStdout: true).trim()
-    }
-
-    private static String getLatestGitgetHeadHashCommand() {
-        return "git rev-parse HEAD"
+        return this.script.sh(script: "git rev-parse HEAD", returnStdout: true).trim()
     }
 }

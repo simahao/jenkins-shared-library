@@ -2,9 +2,13 @@ import hz.Docker
 
 def call(Map args, Closure body={}) {
     node {
-        def Docker = new Docker(this)
+        def docker = new Docker(this)
         stage("Build Docker Image") {
-            Docker.buildDockerImage("${args.microserviceName}")
+            if (${args.tag} == "") {
+                docker.buildDockerImage("${args.imageName}")
+            } else {
+                docker.buildDockerImage("${args.imageName}", "${args.tag}")
+            }
         }
         body()
     }

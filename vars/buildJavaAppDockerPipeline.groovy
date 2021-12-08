@@ -50,7 +50,7 @@ def buildDockerImage(Map args) {
     node {
         def Docker = new Docker(this)
         stage("Build Docker Image") {
-            Docker.buildDockerImage("${args.microserviceName}")
+            Docker.buildDockerImage("${args.imageName}")
         }
     }
     return this
@@ -60,7 +60,7 @@ def publishDockerImage(Map args) {
     node {
         def Docker = new Docker(this)
         stage("Publish Docker Image") {
-            Docker.publishDockerImageToECR("${args.microserviceName}")
+            Docker.publishDockerImageToN3("${args.imageName}")
         }
     }
     return this

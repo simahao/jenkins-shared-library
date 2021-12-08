@@ -33,11 +33,11 @@ def call(Map args) {
         def Docker = new Docker(this)
 
         stage("Build Docker Image") {
-            Docker.buildDockerImage("${args.microserviceName}")
+            Docker.buildDockerImage("${args.imageName}")
         }
 
         stage("Publish Docker Image") {
-            Docker.publishDockerImageToECR("${args.microserviceName}")
+            Docker.publishDockerImageToN3("${args.imageName}")
         }
 
         stage("Deploying to Dev") {

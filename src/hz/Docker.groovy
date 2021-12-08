@@ -8,30 +8,41 @@ class Docker implements Serializable {
 
     private final def script
 
-    static final String dockerUser = "docker"
-    static final String dockerPwd = "Dev2_docker"
-    static final String dockerRegistryUrl = "dev2.docker"
-
     Docker(def script) {
         this.script = script
     }
 
-    void login() {
-        this.script.sh("""docker login -u ${dockerUser} -p ${dockerPwd} ${dockerRegistryUrl}""")
-    }
-    void login(String registry, String user, String pwd) {
-        this.script.sh("""docker login -u ${user} -p ${pwd} ${registry}""")
+    public void login() {
+        this.login(${Constants.DOCKER_USER}, ${Constants.DOCK_PWD}, ${Constants.DOCKER_REGESTRY_DOMAIN})
     }
 
-    void buildDockerImage(String microserviceName) {
+    public void login(String user, String pwd, String dockerRegistryDomain) {
+        this.script.sh("docker login -u ${user} -p ${pwd} ${dockerRegistryDomain}")
+    }
+
+    public void buildDockerImage(String imageName) {
+        this.buildDockerImage(imageName, ${git.getHeadHash()})
+    }
+
+    public void buildDockerImage(String imageName, String tag) {
+        this.buildDockerImage(imageName, tag, ${Constants.DOCKER_REGESTRY_DOMAIN})
+    }
+
+    public void buildDockerImage(String imageName, String tag, String domain) {
         def git = new Git(this.script)
-        script.sh("docker build -t ${dockerRegistryIdentifier}/${microserviceName}:${git.getHeadHash()} .")
+        this.script.sh("docker build -t ${domain}/${imageName}:${tag} .")
     }
 
-    void publishDockerImageToN3(String microserviceName) {
-        loginToAWSECRDockerRegistry(1)
+    public void publishDockerImageToN3(String imageName) {
+        this.publishDockerImageToN3(imageName, ${git.getHeadHash()})
+    }
 
+    public void publishDockerImageToN3(String imageName, String tag) {
+        this.publishDockerImageToN3(imageName, tag, ${Constants.DOCKER_REGESTRY_DOMAIN})
+    }
+
+    public void publishDockerImageToN3(String imageName, String tag, String domain) {
         def git = new Git(this.script)
-        script.sh("docker push ${dockerRegistryIdentifier}/${microserviceName}:${git.getHeadHash()}")
+        this.script.sh("docker push ${domain}/${imageName}:${tag}")
     }
 }

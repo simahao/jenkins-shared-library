@@ -1,9 +1,9 @@
-Build a docker image with the name from microserviceName
+Build a docker image with the name from imageName
 Note that the tag is set to the latest commit tag retrieved from Git and currently this version does not support overriding it.
 
 <br>
-i.e. does a <code>docker build -t microserviceName:[latest commit tag]</code>
+i.e. does a <code>docker build -t imageName:[latest commit tag]</code>
 
-<p style="font-size:14px;"><strong>microserviceName</strong><br><span style="text-indent:40px;display:inline-block;">the name of the project to build a docker image for</span></p>
+<p style="font-size:14px;"><strong>imageName</strong><br><span style="text-indent:40px;display:inline-block;">the name of the project to build a docker image for</span></p>
 
 

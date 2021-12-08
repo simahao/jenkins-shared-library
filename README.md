@@ -34,7 +34,7 @@ buildJavaApp(repo: "name of repo")
 
 ```groovy
 @Library('jenkins-shared-library@1.0.0') _
-buildJavaAppDockerFull(repo: "name of repo", microserviceName: "example-app")
+buildJavaAppDockerFull(repo: "name of repo", imageName: "example-app")
 ```
 
 See under `vars/` to see list of full available Global Variables/Helper Variables to use.
