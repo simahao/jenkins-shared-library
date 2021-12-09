@@ -1,6 +1,6 @@
 def call(Map config=[:], Closure body={}) {
     node {
-        git url: config.repo
+        // git url: config.repo
 
         stage("Install") {
             sh "npm install"
@@ -15,7 +15,6 @@ def call(Map config=[:], Closure body={}) {
                 echo "Deploying..."
             }
         }
-
         body()
     }
 }

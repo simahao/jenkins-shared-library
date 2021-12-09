@@ -1,0 +1,7 @@
+Publishes a docker image with the name from imageName to Nexus3
+<br>
+i.e. does a <code>docker push regestryDomain/imageName:[tag]</code>
+
+<p style="font-size:14px;"><strong>imageName</strong><br><span style="text-indent:40px;display:inline-block;">the name of the project to publish a docker image for</span></p>
+
+

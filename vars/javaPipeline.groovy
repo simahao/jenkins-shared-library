@@ -1,9 +1,17 @@
 import hz.Git
+import hz.Git
+import hz.Constants
 
-def call(Map args) {
+/**
+* @author simahao
+* This class support stream format
+*
+*/
+def call(Map args=[:]) {
     node {
         stage("Checkout") {
-            new Git(this).checkout(args.repo)
+        //    new Git(this).checkout(args.repo)
+            log.info("multibranch pipeline, checkout automatically")
         }
     }
     return this
@@ -20,44 +28,36 @@ def compile(Map args) {
 
 def unitTests(Map args) {
     node {
-        stage("Unit Tests"){
+        stage("Unit Tests") {
             sh "${args.command}"
         }
     }
     return this
 }
 
-def integrationTests(Map args) {
+def qualityAnalyze(Map args) {
     node {
-        stage("Integration Tests"){
+        stage("Quality Analyze") {
             sh "${args.command}"
         }
     }
     return this
 }
 
-def packageArtifact(Map args) {
+def package(Map args) {
     node {
-        stage("Package Artifact"){
+        stage("Package Artifact") {
             sh "${args.command}"
         }
     }
     return this
 }
 
-def publishToNexus(Map args) {
+def publish2N3(Map args) {
     node {
-        stage("Publish to Nexus") {
-            echo "Publishing to Nexus"
-        }
-    }
-    return this
-}
-
-def publishToArtifactory(Map args) {
-    node {
-        stage("Publish to Artifactory") {
-            echo "Publishing to Artifactory"
+        stage("Publish to Nexus3") {
+            log.info("Publishing to Nexus3")
+            sh "${args.command}"
         }
     }
     return this
