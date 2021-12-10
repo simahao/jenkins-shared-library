@@ -1,0 +1,64 @@
+type: java
+cleanWsAfterBuild: true
+compile:
+  exec: true
+  cmds:
+    - mvn clean compile -DskipTests -Dmaven.test.skip=true
+    - ls -al
+
+unitTest:
+  exec: false
+  cmds: |-
+    - mvn test
+
+mvnInstall:
+  exec: true
+  branch: b1|dev.*
+  cmds:
+    - mvn install
+mvnDeploy:
+  exec: false
+  branch: b1|dev.*
+  cmds:
+    - mvn deploy
+
+sshPublish:
+  exec: true
+  cfgName: hz@172.18.0.1
+  transfers:
+    -
+      sourceFiles: target/*.jar
+      remoteDirectory: test
+      removePrefix: test
+      cleanRemote: true
+      execCommand: |-
+        ls -al
+        ls -al
+      execTimeout: 1000
+    -
+      sourceFiles: target/*.class
+      remoteDirectory: test
+      removePrefix: test
+      cleanRemote: true
+      execCommand: |-
+        ls -al
+      execTimeout: 1000
+
+continueDeploy:
+  - deployName: dev
+    exec: true
+    branch: dev-.*
+    servers:
+      -
+        credentail: hz@192.168.0.1
+        dir: /home/dce
+      -
+        credentail: hz@192.168.0.2
+        dir: /home/dce
+  - deployName: it
+    exec: true
+    branch: master
+    servers:
+      -
+        credentail: hz@192.168.0.1
+        dir: /home/dce
