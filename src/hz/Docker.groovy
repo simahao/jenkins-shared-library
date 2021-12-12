@@ -7,9 +7,11 @@ package hz
 class Docker implements Serializable {
 
     private final def script
+    private final def git
 
     Docker(def script) {
         this.script = script
+        this.git = new Git(this.script)
     }
 
     public void login() {
@@ -29,7 +31,6 @@ class Docker implements Serializable {
     }
 
     public void buildImage(String imageName, String tag, String domain) {
-        def git = new Git(this.script)
         this.script.sh("docker build -t ${domain}/${imageName}:${tag} .")
     }
 
@@ -42,7 +43,10 @@ class Docker implements Serializable {
     }
 
     public void publishImage2N3(String imageName, String tag, String domain) {
-        def git = new Git(this.script)
         this.script.sh("docker push ${domain}/${imageName}:${tag}")
+    }
+    
+    public String getDefaultImageTag() {
+        return git.getHeadHash()
     }
 }

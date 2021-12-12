@@ -1,14 +1,20 @@
 type: java
-cleanWsAfterBuild: true
+# checkout has extension for cleaning ws before building
+# please set to false if you have no reason for deleting ws
+deleteWsAfterBuild: false 
+# default branch regex that need do below workflow
+# you can override branch setting with sub workflow's branch regex
+branch: .*
 compile:
   exec: true
+  branch: b.*|p.*
   cmds:
     - mvn clean compile -DskipTests -Dmaven.test.skip=true
     - ls -al
 
 unitTest:
-  exec: false
-  cmds: |-
+  exec: true 
+  cmds:
     - mvn test
 
 mvnInstall:
@@ -16,49 +22,103 @@ mvnInstall:
   branch: b1|dev.*
   cmds:
     - mvn install
+
 mvnDeploy:
-  exec: false
+  exec: false 
   branch: b1|dev.*
   cmds:
     - mvn deploy
 
-sshPublish:
-  exec: true
-  cfgName: hz@172.18.0.1
-  transfers:
-    -
-      sourceFiles: target/*.jar
-      remoteDirectory: test
-      removePrefix: test
-      cleanRemote: true
-      execCommand: |-
-        ls -al
-        ls -al
-      execTimeout: 1000
-    -
-      sourceFiles: target/*.class
-      remoteDirectory: test
-      removePrefix: test
-      cleanRemote: true
-      execCommand: |-
-        ls -al
-      execTimeout: 1000
+jacocoReport:
+  exec: false
+  branch: b1|dev.*
+
+junitReport:
+  exec: false
+  branch: b1|dev.*
 
 continueDeploy:
-  - deployName: dev
-    exec: true
-    branch: dev-.*
-    servers:
-      -
-        credentail: hz@192.168.0.1
-        dir: /home/dce
-      -
-        credentail: hz@192.168.0.2
-        dir: /home/dce
-  - deployName: it
-    exec: true
-    branch: master
-    servers:
-      -
-        credentail: hz@192.168.0.1
-        dir: /home/dce
+  branch: b1|dev.+
+  env:
+    -
+      name: dev 
+      exec: true
+      server:
+        -
+          configName: "hz@172.18.0.1"
+          transfer:
+            -
+              sourceFiles: target/**/*.jar
+              remoteDirectory: test
+              removePrefix: target 
+              cleanRemote: true
+              execCommand: |-
+                ls -al
+                ls -al
+              execTimeout: 1000
+            -
+              sourceFiles: target/**/*.class
+              remoteDirectory: test
+              removePrefix: target 
+              cleanRemote: true
+              execCommand: |-
+                ls -al
+              execTimeout: 1000
+        -
+          configName: "hz@172.18.0.1"
+          transfer:
+            -
+              sourceFiles: target/**/*.jar
+              remoteDirectory: test
+              removePrefix: target 
+              cleanRemote: true
+              execCommand: |-
+                ls -al
+                ls -al
+              execTimeout: 1000
+    -
+      name: it 
+      exec: true
+      server:
+        -
+          configName: "hz@172.18.0.1"
+          transfer:
+            -
+              sourceFiles: target/**/*.jar
+              remoteDirectory: test
+              removePrefix: target 
+              cleanRemote: true
+              execCommand: |-
+                ls -al
+                ls -al
+              execTimeout: 1000
+            -
+              sourceFiles: target/**/*.class
+              remoteDirectory: test
+              removePrefix: target 
+              cleanRemote: true
+              execCommand: |-
+                ls -al
+              execTimeout: 1000
+        -
+          configName: "hz@172.18.0.1"
+          transfer:
+            -
+              sourceFiles: target/**/*.jar
+              remoteDirectory: test
+              removePrefix: target 
+              cleanRemote: true
+              execCommand: |-
+                ls -al
+                ls -al
+              execTimeout: 1000
+
+docker:
+  branch: p1|dev.*
+  imageTag: v1.0
+  domain: dev2.docker
+  buildImage:
+    exec: false 
+    imageName: xx
+  publish2N3:
+    exec: false 

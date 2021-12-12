@@ -4,6 +4,17 @@
 */
 def call(Closure body={}) {
     node{
+        //script pipeline should checkout mannual
+        //declared pipeline checkout automatically
+        checkout(
+            changelog: true,
+            poll: true,
+            scm: [$class: 'GitSCM',
+                branches: scm.branches,
+                extensions: scm.extensions + [[$class: 'CleanBeforeCheckout']],
+                userRemoteConfigs: scm.userRemoteConfigs
+            ]
+        )
         Map cfg = readYaml file: "pipeline.yml"
 
         switch(cfg.type) {
