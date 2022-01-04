@@ -1,7 +1,7 @@
 type: java
 # checkout has extension for cleaning ws before building
 # please set to false if you have no reason for deleting ws
-deleteWsAfterBuild: false 
+deleteWsAfterBuild: false
 # default branch regex that need do below workflow
 # you can override branch setting with sub workflow's branch regex
 branch: .*
@@ -13,7 +13,7 @@ compile:
     - ls -al
 
 unitTest:
-  exec: true 
+  exec: true
   cmds:
     - mvn test
 
@@ -24,7 +24,7 @@ mvnInstall:
     - mvn install
 
 mvnDeploy:
-  exec: false 
+  exec: false
   branch: b1|dev.*
   cmds:
     - mvn deploy
@@ -37,11 +37,17 @@ junitReport:
   exec: false
   branch: b1|dev.*
 
+tagAndRelease:
+  exec: true
+  branch: b1
+  tag: v1.0.2
+  repo: dev2/test
+
 continueDeploy:
   branch: b1|dev.+
   env:
     -
-      name: dev 
+      name: dev
       exec: true
       server:
         -
@@ -50,7 +56,7 @@ continueDeploy:
             -
               sourceFiles: target/**/*.jar
               remoteDirectory: test
-              removePrefix: target 
+              removePrefix: target
               cleanRemote: true
               execCommand: |-
                 ls -al
@@ -59,7 +65,7 @@ continueDeploy:
             -
               sourceFiles: target/**/*.class
               remoteDirectory: test
-              removePrefix: target 
+              removePrefix: target
               cleanRemote: true
               execCommand: |-
                 ls -al
@@ -70,14 +76,14 @@ continueDeploy:
             -
               sourceFiles: target/**/*.jar
               remoteDirectory: test
-              removePrefix: target 
+              removePrefix: target
               cleanRemote: true
               execCommand: |-
                 ls -al
                 ls -al
               execTimeout: 1000
     -
-      name: it 
+      name: it
       exec: true
       server:
         -
@@ -86,7 +92,7 @@ continueDeploy:
             -
               sourceFiles: target/**/*.jar
               remoteDirectory: test
-              removePrefix: target 
+              removePrefix: target
               cleanRemote: true
               execCommand: |-
                 ls -al
@@ -95,7 +101,7 @@ continueDeploy:
             -
               sourceFiles: target/**/*.class
               remoteDirectory: test
-              removePrefix: target 
+              removePrefix: target
               cleanRemote: true
               execCommand: |-
                 ls -al
@@ -106,7 +112,7 @@ continueDeploy:
             -
               sourceFiles: target/**/*.jar
               remoteDirectory: test
-              removePrefix: target 
+              removePrefix: target
               cleanRemote: true
               execCommand: |-
                 ls -al
@@ -118,7 +124,7 @@ docker:
   imageTag: v1.0
   domain: dev2.docker
   buildImage:
-    exec: false 
+    exec: false
     imageName: xx
   publish2N3:
-    exec: false 
+    exec: false

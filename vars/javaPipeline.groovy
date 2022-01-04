@@ -132,6 +132,50 @@ def call(Map args, Closure body={}) {
             log.info("branch pattern: ${pattern}, branchName: ${env.BRANCH_NAME}, changeBranch: ${env.CHANGE_BRANCH}, tag: ${env.TAG_NAME}")
         }
 
+        if (args.tagAndRelease != null && args.tagAndRelease.exec) {
+            if (env.BRANCH_NAME ==~ pattern || env.CHANGE_BRANCH ==~ pattern || env.TAG_NAME ==~ pattern) {
+                stage("tag and release to gitea") {
+                    log.info("preparing tag and release to gitea stage")
+                    withEnv(['PATH+EXTRA=/usr/local/node-v16.13.1/bin']) {
+                        sh """
+                            git fetch --all
+                            git tag -l | grep -q "${args.tagAndRelease.tag}" && echo "tag:${args.tagAndRelease.tag} is exist,pls change tag name"
+                            sed -E -i "s/(^.*version: +)(.*)/\1${args.tagAndRelease.tag}/g" package.json
+                            ls CHANGELOG.md > /dev/null 2>&1 && line_b=\$(awk 'END{print NR}' CHANGELOG.md) || line_b=0
+                            npm ls -g conventional-changelog-cli > /dev/null 2>&1 || npm install -g conventional-changelog-cli
+                            npm run genlog
+                            git config --local user.name "jenkins"
+                            git config --local user.email "zhanghao@dce.com.cn"
+                            git add .
+                            git commit -m 'ci: changelog'
+                            git tag "${args.tagAndRelease.tag}"
+                            git push origin "${args.tagAndRelease.tag}"
+                            line_a=\$(awk 'END{print NR}' CHANGELOG.md)
+                            added=\$((\${line_a}-\${line_b}))
+                            diff_log=\$(sed -n "1,\${added}p" CHANGELOG.md | awk -v d='\\\\n' '{s=(NR==1?s:s d)\$0}END{print s}')
+                            token="b21ac3ee961836bdc642ae842a60e30bee901257"
+                            gitea_url="http://wslhost:3000/api/v1/repos/${args.tagAndRelease.repo}/releases?token=\${token}"
+                            curl -X 'POST' \
+                                "\${gitea_url}" \
+                                -H 'accept: application/json' \
+                                -H 'Content-Type: application/json' \
+                                -d "{
+                                    \"body\": \"\$diff_log\",
+                                    \"draft\": false,
+                                    \"name\": \"${args.tagAndRelease.tag}\",
+                                    \"prerelease\": true,
+                                    \"tag_name\": \"${args.tagAndRelease.tag}\"
+                                }"
+                        """
+                    }
+                }
+            } else {
+                log.info("branch pattern: ${pattern}, branchName: ${env.BRANCH_NAME}, changeBranch: ${env.CHANGE_BRANCH}, tag: ${env.TAG_NAME}")
+            }
+        } else {
+            log.info("sss")
+        }
+
         // continue deploy stage
         if (args.continueDeploy.branch != null) {
             pattern = "${args.continueDeploy.branch}"
