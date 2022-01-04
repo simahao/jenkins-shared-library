@@ -153,7 +153,7 @@ def call(Map args, Closure body={}) {
                             line_a=\$(awk 'END{print NR}' CHANGELOG.md)
                             added=\$((\${line_a}-\${line_b}))
                             diff_log=\$(sed -n "1,\${added}p" CHANGELOG.md | awk -v d='\\\\n' '{s=(NR==1?s:s d)\$0}END{print s}')
-                            token="b21ac3ee961836bdc642ae842a60e30bee901257"
+                            token="2965fe900b19a87a917067abe1652884ebd3f42e"
                             gitea_url="http://wslhost:3000/api/v1/repos/${args.tagAndRelease.repo}/releases?token=\${token}"
                             curl -X 'POST' \
                                 "\${gitea_url}" \
